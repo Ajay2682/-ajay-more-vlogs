@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAY MORE VLOGS | Explore • Experience • Capture</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Rozha+One&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            300: '#FDE047',
+                            400: '#FACC15',
+                            500: '#EAB308',
+                            600: '#CA8A04',
+                            glow: '#FFD700',
+                        },
+                        amber: {
+                            500: '#F59E0B',
+                            600: '#D97706',
+                        },
+                        dark: {
+                            900: '#0B0F17',
+                            800: '#111827',
+                            700: '#1F2937',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif'],
+                        hindi: ['Rozha One', 'serif']
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 3s infinite alternate',
+                        'float': 'float 6s ease-in-out infinite',
+                        'spin-slow': 'spin 20s linear infinite',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%': { boxShadow: '0 0 15px rgba(234, 179, 8, 0.2)' },
+                            '100%': { boxShadow: '0 0 35px rgba(234, 179, 8, 0.6)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-12px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom Customizations & Glassmorphism */
+        body {
+            background-color: #07090e;
+            color: #f3f4f6;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.55);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 215, 0, 0.12);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(234, 179, 8, 0.5);
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 20px 40px -15px rgba(234, 179, 8, 0.25);
+        }
+
+        .text-glow {
+            text-shadow: 0 0 20px rgba(234, 179, 8, 0.5);
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FFF 0%, #FACC15 50%, #CA8A04 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #07090e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #eab308;
+        }
+
+        /* Canvas Overlay Fix */
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: auto;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .interactive-element {
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="relative selection:bg-gold-500 selection:text-black">
+
+    <!-- Preloader Screen -->
+    <div id="preloader" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-dark-900 transition-opacity duration-700">
+        <div class="relative flex items-center justify-center">
+            <div class="w-24 h-24 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin"></div>
+            <div class="absolute text-gold-400 font-heading font-extrabold text-xl">AM</div>
+        </div>
+        <h2 class="mt-6 text-xl tracking-widest font-heading gold-gradient-text animate-pulse">AJAY MORE VLOGS</h2>
+        <p class="text-xs text-gray-400 mt-2 tracking-wider">LOADING CINEMATIC EXPERIENCE...</p>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 w-full z-40 px-4 md:px-8 py-4 transition-all duration-300" id="main-header">
+        <nav class="max-w-7xl mx-auto glass-panel rounded-full px-6 py-3 flex items-center justify-between shadow-2xl">
+            <!-- Brand Logo -->
+            <a href="#home" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-gold-600 to-amber-400 flex items-center justify-center text-black font-extrabold font-heading text-lg shadow-lg group-hover:scale-105 transition-transform">
+                    AM
+                </div>
+                <div>
+                    <span class="font-heading font-extrabold text-lg tracking-wider text-white group-hover:text-gold-400 transition-colors block leading-none">AJAY MORE</span>
+                    <span class="text-[10px] tracking-widest text-gold-400 font-semibold uppercase block leading-tight">VLOGS</span>
+                </div>
+            </a>
+
+            <!-- Tagline Badge Desktop -->
+            <div class="hidden xl:flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium tracking-widest text-gray-300">
+                <i data-lucide="compass" class="w-3.5 h-3.5 text-gold-400 animate-spin-slow"></i>
+                <span>EXPLORE • EXPERIENCE • CAPTURE</span>
+            </div>
+
+            <!-- Nav Links Desktop -->
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+                <a href="#home" class="text-gray-300 hover:text-gold-400 transition-colors">Home</a>
+                <a href="#vlogs" class="text-gray-300 hover:text-gold-400 transition-colors">Vlogs</a>
+                <a href="#gallery" class="text-gray-300 hover:text-gold-400 transition-colors">Gallery</a>
+                <a href="#travel" class="text-gray-300 hover:text-gold-400 transition-colors">Travel</a>
+                <a href="#about" class="text-gray-300 hover:text-gold-400 transition-colors">About</a>
+            </div>
+
+            <!-- CTA & Mobile Toggle -->
+            <div class="flex items-center gap-3">
+                <a href="#contact" class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-gold-500 to-amber-600 text-black font-semibold text-xs uppercase tracking-wider hover:brightness-110 transition-all shadow-lg shadow-gold-500/20 active:scale-95">
+                    <span>Connect</span>
+                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                </a>
+
+                <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-300 hover:text-gold-400 focus:outline-none">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobile-menu" class="hidden md:hidden max-w-7xl mx-auto mt-3 glass-panel rounded-2xl p-6 flex flex-col gap-4 text-center transition-all">
+            <a href="#home" class="mobile-link text-gray-200 py-2 hover:text-gold-400 font-medium border-b border-white/5">Home</a>
+            <a href="#vlogs" class="mobile-link text-gray-200 py-2 hover:text-gold-400 font-medium border-b border-white/5">Latest Vlogs</a>
+            <a href="#gallery" class="mobile-link text-gray-200 py-2 hover:text-gold-400 font-medium border-b border-white/5">Photo Gallery</a>
+            <a href="#travel" class="mobile-link text-gray-200 py-2 hover:text-gold-400 font-medium border-b border-white/5">Travel Map</a>
+            <a href="#about" class="mobile-link text-gray-200 py-2 hover:text-gold-400 font-medium border-b border-white/5">About Me</a>
+            <a href="#contact" class="mobile-link text-gold-400 py-2 font-bold flex items-center justify-center gap-2">
+                <span>GET IN TOUCH</span>
+                <i data-lucide="phone" class="w-4 h-4"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- SECTION 1: 3D HERO SECTION -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center pt-24 pb-12 overflow-hidden">
+        <!-- Three.js Canvas Container -->
+        <canvas id="hero-canvas"></canvas>
+
+        <!-- Ambient Lighting Overlay Gradients -->
+        <div class="absolute inset-0 bg-gradient-to-b from-dark-900/60 via-transparent to-dark-900 pointer-events-none z-0"></div>
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-gold-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-amber-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <!-- Hero Content Layer -->
+        <div class="max-w-6xl mx-auto px-4 text-center hero-content flex flex-col items-center justify-center">
+            
+            <!-- Floating Badge -->
+            <div class="interactive-element inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-gold-500/30 text-gold-400 mb-6 text-xs font-semibold tracking-widest uppercase animate-float">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                <span>WELCOME TO MY WORLD</span>
+            </div>
+
+            <!-- Main Heading -->
+            <h1 class="font-heading font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-white mb-4 leading-none">
+                CREATE <span class="text-gold-400 text-glow">•</span> TRAVEL <span class="text-gold-400 text-glow">•</span> EXPLORE
+            </h1>
+
+            <p class="text-gray-300 text-sm md:text-lg max-w-2xl font-light tracking-widest uppercase mb-6 font-heading text-glow">
+                A JOURNEY THROUGH MY LENS
+            </p>
+
+            <!-- Hindi Quote Card -->
+            <div class="interactive-element max-w-2xl mx-auto glass-card rounded-2xl p-6 md:p-8 mb-8 border-l-4 border-l-gold-500 shadow-2xl">
+                <i data-lucide="quote" class="w-8 h-8 text-gold-400/50 mx-auto mb-2"></i>
+                <p class="font-hindi text-lg sm:text-xl md:text-2xl text-amber-100 leading-relaxed font-normal">
+                    "हर सफर की अपनी एक कहानी होती है। मैं उन कहानियों को Vlogs, Photos और Videos के जरिए आपके साथ Share करता हूँ।"
+                </p>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="interactive-element flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+                <a href="#vlogs" class="px-8 py-4 rounded-full bg-gradient-to-r from-gold-500 to-amber-600 text-black font-bold text-sm tracking-wider uppercase hover:brightness-110 transition-all shadow-xl shadow-gold-500/25 flex items-center gap-3 active:scale-95 group">
+                    <i data-lucide="play-circle" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
+                    <span>WATCH MY VLOGS</span>
+                </a>
+
+                <a href="#about" class="px-8 py-4 rounded-full glass-panel hover:bg-white/10 text-white font-semibold text-sm tracking-wider uppercase border border-white/20 transition-all flex items-center gap-2 active:scale-95">
+                    <span>EXPLORE</span>
+                    <i data-lucide="compass" class="w-4 h-4 text-gold-400"></i>
+                </a>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <a href="#vlogs" class="interactive-element mt-16 flex flex-col items-center gap-2 text-gray-400 hover:text-gold-400 transition-colors group">
+                <span class="text-[10px] tracking-widest uppercase">Scroll Down</span>
+                <i data-lucide="chevron-down" class="w-5 h-5 animate-bounce text-gold-400"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- SECTION 2: LATEST VLOGS -->
+    <section id="vlogs" class="py-24 relative z-10 px-4 md:px-8 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 border-b border-white/10 pb-6">
+            <div>
+                <div class="flex items-center gap-2 text-gold-400 text-xs font-bold uppercase tracking-widest mb-2">
+                    <i data-lucide="video" class="w-4 h-4"></i>
+                    <span>Cinematic Episodes</span>
+                </div>
+                <h2 class="font-heading text-3xl md:text-5xl font-extrabold text-white">
+                    MY LATEST <span class="gold-gradient-text">VLOGS</span>
+                </h2>
+            </div>
+            <p class="text-gray-400 text-sm max-w-md mt-4 md:mt-0">
+                Experience high-definition stories, travel adventures, and daily moments captured with cinematic aesthetics.
+            </p>
+        </div>
+
+        <!-- Vlog Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- Vlog Card 01 -->
+            <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer" onclick="openVideoModal('https://www.youtube.com/embed/dQw4w9WgXcQ', 'MY NEW JOURNEY')">
+                <div class="relative h-64 sm:h-80 overflow-hidden bg-dark-800">
+                    <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1200&q=80" alt="My New Journey" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/30 to-transparent"></div>
+                    <div class="absolute top-4 left-4 glass-panel px-3 py-1 rounded-full text-xs font-extrabold text-gold-400 border border-gold-500/30">
+                        01
+                    </div>
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="w-16 h-16 rounded-full bg-gold-500 text-black flex items-center justify-center shadow-2xl scale-75 group-hover:scale-100 transition-transform">
+                            <i data-lucide="play" class="w-8 h-8 fill-current ml-1"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8">
+                    <div class="flex items-center gap-2 text-xs font-medium text-gold-400 uppercase tracking-widest mb-2">
+                        <span>Travel</span> • <span>Lifestyle</span> • <span>Vlog</span>
+                    </div>
+                    <h3 class="font-heading text-xl md:text-2xl font-bold text-white group-hover:text-gold-400 transition-colors">
+                        01 — MY NEW JOURNEY
+                    </h3>
+                    <p class="text-gray-400 text-sm mt-2 line-clamp-2">
+                        Embarking on a fresh cinematic chapter exploring breathtaking landscapes and authentic cultural experiences.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Vlog Card 02 -->
+            <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer" onclick="openVideoModal('https://www.youtube.com/embed/dQw4w9WgXcQ', 'A DAY IN MY LIFE')">
+                <div class="relative h-64 sm:h-80 overflow-hidden bg-dark-800">
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80" alt="A Day In My Life" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/30 to-transparent"></div>
+                    <div class="absolute top-4 left-4 glass-panel px-3 py-1 rounded-full text-xs font-extrabold text-gold-400 border border-gold-500/30">
+                        02
+                    </div>
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="w-16 h-16 rounded-full bg-gold-500 text-black flex items-center justify-center shadow-2xl scale-75 group-hover:scale-100 transition-transform">
+                            <i data-lucide="play" class="w-8 h-8 fill-current ml-1"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8">
+                    <div class="flex items-center gap-2 text-xs font-medium text-gold-400 uppercase tracking-widest mb-2">
+                        <span>Daily Life</span> • <span>Cinematic Vlog</span>
+                    </div>
+                    <h3 class="font-heading text-xl md:text-2xl font-bold text-white group-hover:text-gold-400 transition-colors">
+                        02 — A DAY IN MY LIFE
+                    </h3>
+                    <p class="text-gray-400 text-sm mt-2 line-clamp-2">
+                        Behind the scenes of content creation, editing sessions, morning routines, and creative chaos.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Vlog Card 03 -->
+            <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer" onclick="openVideoModal('https://www.youtube.com/embed/dQw4w9WgXcQ', 'EXPLORE MAHARASHTRA')">
+                <div class="relative h-64 sm:h-80 overflow-hidden bg-dark-800">
+                    <img src="https://images.unsplash.com/photo-1596178065887-1198b6148b2b?auto=format&fit=crop&w=1200&q=80" alt="Explore Maharashtra" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/30 to-transparent"></div>
+                    <div class="absolute top-4 left-4 glass-panel px-3 py-1 rounded-full text-xs font-extrabold text-gold-400 border border-gold-500/30">
+                        03
+                    </div>
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="w-16 h-16 rounded-full bg-gold-500 text-black flex items-center justify-center shadow-2xl scale-75 group-hover:scale-100 transition-transform">
+                            <i data-lucide="play" class="w-8 h-8 fill-current ml-1"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8">
+                    <div class="flex items-center gap-2 text-xs font-medium text-gold-400 uppercase tracking-widest mb-2">
+                        <span>Travel</span> • <span>Culture</span> • <span>Adventure</span>
+                    </div>
+                    <h3 class="font-heading text-xl md:text-2xl font-bold text-white group-hover:text-gold-400 transition-colors">
+                        03 — EXPLORE MAHARASHTRA
+                    </h3>
+                    <p class="text-gray-400 text-sm mt-2 line-clamp-2">
+                        Discovering historic forts, vibrant local traditions, rich heritage, and scenic wonders across Maharashtra.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Vlog Card 04 -->
+            <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer" onclick="openVideoModal('https://www.youtube.com/embed/dQw4w9WgXcQ', 'CITY EXPLORATION')">
+                <div class="relative h-64 sm:h-80 overflow-hidden bg-dark-800">
+                    <img src="https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=1200&q=80" alt="City Exploration" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/30 to-transparent"></div>
+                    <div class="absolute top-4 left-4 glass-panel px-3 py-1 rounded-full text-xs font-extrabold text-gold-400 border border-gold-500/30">
+                        04
+                    </div>
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="w-16 h-16 rounded-full bg-gold-500 text-black flex items-center justify-center shadow-2xl scale-75 group-hover:scale-100 transition-transform">
+                            <i data-lucide="play" class="w-8 h-8 fill-current ml-1"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8">
+                    <div class="flex items-center gap-2 text-xs font-medium text-gold-400 uppercase tracking-widest mb-2">
+                        <span>Travel</span> • <span>Street</span> • <span>Lifestyle</span>
+                    </div>
+                    <h3 class="font-heading text-xl md:text-2xl font-bold text-white group-hover:text-gold-400 transition-colors">
+                        04 — CITY EXPLORATION
+                    </h3>
+                    <p class="text-gray-400 text-sm mt-2 line-clamp-2">
+                        Uncovering hidden urban gems, local food scenes, vibrant market streets, and late-night city vibes.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- View All Button -->
+        <div class="mt-12 text-center">
+            <a href="https://youtube.com/@ajaymore-tp1ht?si=mtWcyKLgwzh3kJYX" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 px-8 py-4 rounded-full glass-panel hover:bg-gold-500 hover:text-black text-white font-bold text-xs uppercase tracking-wider transition-all border border-gold-500/30 shadow-lg">
+                <span>VIEW ALL VLOGS ON YOUTUBE</span>
+                <i data-lucide="external-link" class="w-4 h-4"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- SECTION 3: PHOTO GALLERY -->
+    <section id="gallery" class="py-24 relative z-10 px-4 md:px-8 max-w-7xl mx-auto bg-dark-900/50 rounded-3xl my-12 border border-white/5">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <div class="inline-flex items-center gap-2 text-gold-400 text-xs font-bold uppercase tracking-widest mb-2">
+                <i data-lucide="camera" class="w-4 h-4"></i>
+                <span>CAPTURED MOMENTS</span>
+            </div>
+            <h2 class="font-heading text-3xl md:text-5xl font-extrabold text-white mb-4">
+                PHOTO <span class="gold-gradient-text">GALLERY</span>
+            </h2>
+            <p class="text-gray-400 text-sm md:text-base">
+                "Every picture tells a story." Frozen memories captured across journeys and adventures.
+            </p>
+        </div>
+
+        <!-- Photo Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Photo 01 -->
+            <div class="glass-card rounded-2xl overflow-hidden group relative h-80 cursor-pointer" onclick="openPhotoModal('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80', 'Mountain Horizon')">
+                <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" alt="Photo 01" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+                    <span class="text-gold-400 text-xs font-semibold uppercase tracking-wider">PHOTO 01</span>
+                    <h4 class="text-white font-heading font-bold text-lg">Mountain Horizon</h4>
+                </div>
+            </div>
+
+            <!-- Photo 02 -->
+            <div class="glass-card rounded-2xl overflow-hidden group relative h-80 cursor-pointer" onclick="openPhotoModal('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=80', 'Roadtrips & Wanderlust')">
+                <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80" alt="Photo 02" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+                    <span class="text-gold-400 text-xs font-semibold uppercase tracking-wider">PHOTO 02</span>
+                    <h4 class="text-white font-heading font-bold text-lg">Roadtrips & Wanderlust</h4>
+                </div>
+            </div>
+
+            <!-- Photo 03 -->
+            <div class="glass-card rounded-2xl overflow-hidden group relative h-80 cursor-pointer" onclick="openPhotoModal('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80', 'Coastal Waves')">
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80" alt="Photo 03" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+                    <span class="text-gold-400 text-xs font-semibold uppercase tracking-wider">PHOTO 03</span>
+                    <h4 class="text-white font-heading font-bold text-lg">Coastal Waves</h4>
+                </div>
+            </div>
+
+            <!-- Photo 04 -->
+            <div class="glass-card rounded-2xl overflow-hidden group relative h-80 cursor-pointer" onclick="openPhotoModal('https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1200&q=80', 'City Neon Nights')">
+                <img src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=800&q=80" alt="Photo 04" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+                    <span class="text-gold-400 text-xs font-semibold uppercase tracking-wider">PHOTO 04</span>
+                    <h4 class="text-white font-heading font-bold text-lg">City Neon Nights</h4>
+                </div>
+            </div>
+
+            <!-- Photo 05 -->
+            <div class="glass-card rounded-2xl overflow-hidden group relative h-80 cursor-pointer" onclick="openPhotoModal('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1200&q=80', 'Mist & Wilderness')">
+                <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80" alt="Photo 05" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+                    <span class="text-gold-400 text-xs font-semibold uppercase tracking-wider">PHOTO 05</span>
+                    <h4 class="text-white font-heading font-bold text-lg">Mist & Wilderness</h4>
+                </div>
+            </div>
+
+            <!-- Photo 06 -->
+            <div class="glass-card rounded-2xl overflow-hidden group relative h-80 cursor-pointer" onclick="openPhotoModal('https://images.unsplash.com/photo-1518495973542-4542c06a5843?auto=format&fit=crop&w=1200&q=80', 'Golden Hour Glow')">
+                <img src="https://images.unsplash.com/photo-1518495973542-4542c06a5843?auto=format&fit=crop&w=800&q=80" alt="Photo 06" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+                    <span class="text-gold-400 text-xs font-semibold uppercase tracking-wider">PHOTO 06</span>
+                    <h4 class="text-white font-heading font-bold text-lg">Golden Hour Glow</h4>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 4: TRAVEL MAP / PINS -->
+    <section id="travel" class="py-24 relative z-10 px-4 md:px-8 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row items-center gap-12">
+            
+            <div class="w-full md:w-1/2">
+                <div class="inline-flex items-center gap-2 text-gold-400 text-xs font-bold uppercase tracking-widest mb-2">
+                    <i data-lucide="map-pin" class="w-4 h-4"></i>
+                    <span>EXPLORATION MAP</span>
+                </div>
+                <h2 class="font-heading text-3xl md:text-5xl font-extrabold text-white mb-6">
+                    MY <span class="gold-gradient-text">JOURNEY</span>
+                </h2>
+                <p class="text-gray-300 leading-relaxed mb-8">
+                    Mapping out moments across incredible destinations. From my hometown roots to unexplored trails across India.
+                </p>
+
+                <!-- Location Highlights -->
+                <div class="space-y-4">
+                    <div class="glass-card p-4 rounded-2xl flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-gold-500/20 text-gold-400 flex items-center justify-center font-bold">
+                                📍
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold font-heading">AKOLA</h4>
+                                <span class="text-xs text-gray-400">Hometown Roots & Daily Vlogs</span>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-[10px] bg-gold-500/10 text-gold-400 font-bold border border-gold-500/20">ACTIVE</span>
+                    </div>
+
+                    <div class="glass-card p-4 rounded-2xl flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-gold-500/20 text-gold-400 flex items-center justify-center font-bold">
+                                📍
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold font-heading">MAHARASHTRA</h4>
+                                <span class="text-xs text-gray-400">Forts, Culture & Roadtrips</span>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-[10px] bg-gold-500/10 text-gold-400 font-bold border border-gold-500/20">FEATURED</span>
+                    </div>
+
+                    <div class="glass-card p-4 rounded-2xl flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-gold-500/20 text-gold-400 flex items-center justify-center font-bold">
+                                📍
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold font-heading">INDIA</h4>
+                                <span class="text-xs text-gray-400">National Travel & Exploration</span>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-[10px] bg-gold-500/10 text-gold-400 font-bold border border-gold-500/20">EXPANDING</span>
+                    </div>
+                </div>
+
+                <div class="mt-8 p-4 glass-panel rounded-2xl border border-dashed border-gold-500/30 text-center">
+                    <p class="text-xs text-gold-400 font-semibold tracking-widest uppercase">
+                        ✨ More places coming soon...
+                    </p>
+                </div>
+            </div>
+
+            <!-- Stylized Interactive Visual Map Card -->
+            <div class="w-full md:w-1/2">
+                <div class="glass-card p-8 rounded-3xl relative overflow-hidden text-center min-h-[380px] flex flex-col justify-between items-center border border-gold-500/30">
+                    <div class="absolute inset-0 bg-[radial-gradient(#eab308_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
+                    
+                    <div class="relative z-10">
+                        <span class="text-xs font-bold text-gold-400 tracking-widest uppercase">LIVE TRACKER</span>
+                        <h3 class="text-2xl font-heading font-extrabold text-white mt-1">MAHARASHTRA & BEYOND</h3>
+                    </div>
+
+                    <div class="relative z-10 my-8">
+                        <div class="w-32 h-32 rounded-full border-2 border-gold-500/40 flex items-center justify-center relative animate-pulse-glow mx-auto">
+                            <i data-lucide="compass" class="w-16 h-16 text-gold-400 animate-spin-slow"></i>
+                            <div class="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-gold-500 text-black font-extrabold text-[10px]">AKOLA</div>
+                        </div>
+                    </div>
+
+                    <div class="relative z-10 w-full flex justify-around text-center text-xs border-t border-white/10 pt-4">
+                        <div>
+                            <span class="block text-gold-400 font-bold">3+</span>
+                            <span class="text-gray-400">Key Hubs</span>
+                        </div>
+                        <div>
+                            <span class="block text-gold-400 font-bold">50+</span>
+                            <span class="text-gray-400">Locations Shot</span>
+                        </div>
+                        <div>
+                            <span class="block text-gold-400 font-bold">100%</span>
+                            <span class="text-gray-400">Original Vlogs</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 5: ABOUT ME -->
+    <section id="about" class="py-24 relative z-10 px-4 md:px-8 max-w-7xl mx-auto">
+        <div class="glass-card rounded-3xl p-8 md:p-14 relative overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Avatar / Visual Showcase -->
+                <div class="lg:col-span-5 relative">
+                    <div class="relative w-full aspect-square max-w-md mx-auto rounded-2xl overflow-hidden border-2 border-gold-500/40 shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" alt="Ajay More" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 right-4 glass-panel p-4 rounded-xl">
+                            <span class="text-gold-400 text-xs font-bold uppercase tracking-wider block">CONTENT CREATOR</span>
+                            <h4 class="text-white font-heading font-extrabold text-lg">AJAY MORE</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bio Content -->
+                <div class="lg:col-span-7">
+                    <div class="inline-flex items-center gap-2 text-gold-400 text-xs font-bold uppercase tracking-widest mb-2">
+                        <i data-lucide="user" class="w-4 h-4"></i>
+                        <span>CREATOR PROFILE</span>
+                    </div>
+                    <h2 class="font-heading text-3xl md:text-5xl font-extrabold text-white mb-6">
+                        HEY, I'M <span class="gold-gradient-text">AJAY</span>
+                    </h2>
+
+                    <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-6 font-light">
+                        I'm a creator who loves capturing moments, exploring new places, and creating cinematic content.
+                    </p>
+
+                    <p class="text-gray-400 text-sm md:text-base leading-relaxed mb-8">
+                        This website is my digital vlog space where I share my journey, experiences, and creativity with everyone who loves travel, storytelling, and authentic moments.
+                    </p>
+
+                    <!-- Stats Row -->
+                    <div class="grid grid-cols-3 gap-4 border-t border-white/10 pt-6">
+                        <div>
+                            <div class="font-heading font-extrabold text-2xl md:text-3xl text-gold-400">100+</div>
+                            <div class="text-xs text-gray-400 mt-1">Videos Released</div>
+                        </div>
+                        <div>
+                            <div class="font-heading font-extrabold text-2xl md:text-3xl text-gold-400">50+</div>
+                            <div class="text-xs text-gray-400 mt-1">Places Explored</div>
+                        </div>
+                        <div>
+                            <div class="font-heading font-extrabold text-2xl md:text-3xl text-gold-400">10K+</div>
+                            <div class="text-xs text-gray-400 mt-1">Community</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: FEATURED VIDEO -->
+    <section class="py-24 relative z-10 px-4 md:px-8 max-w-7xl mx-auto text-center">
+        <div class="inline-flex items-center gap-2 text-gold-400 text-xs font-bold uppercase tracking-widest mb-2">
+            <i data-lucide="film" class="w-4 h-4"></i>
+            <span>SPOTLIGHT</span>
+        </div>
+        <h2 class="font-heading text-3xl md:text-5xl font-extrabold text-white mb-12">
+            WATCH MY <span class="gold-gradient-text">FEATURED VLOG</span>
+        </h2>
+
+        <!-- Featured Video Container -->
+        <div class="max-w-4xl mx-auto glass-card rounded-3xl p-4 sm:p-6 border border-gold-500/30">
+            <div class="relative aspect-video rounded-2xl overflow-hidden bg-dark-900 group cursor-pointer" onclick="openVideoModal('https://www.youtube.com/embed/dQw4w9WgXcQ', 'Featured Vlog')">
+                <img src="https://images.unsplash.com/photo-1518173946687-a4c8a383392e?auto=format&fit=crop&w=1200&q=80" alt="Featured Vlog Thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
+                
+                <!-- Center Animated Play Button -->
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gold-500 text-black flex items-center justify-center shadow-2xl animate-pulse group-hover:scale-110 transition-transform">
+                        <i data-lucide="play" class="w-10 h-10 fill-current ml-1"></i>
+                    </div>
+                    <span class="mt-4 px-6 py-2 rounded-full glass-panel text-xs font-bold tracking-widest text-white uppercase border border-white/20">
+                        ▶ WATCH VIDEO NOW
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: SOCIAL MEDIA & CONTACT -->
+    <section id="contact" class="py-24 relative z-10 px-4 md:px-8 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            
+            <!-- Social Connect Cards -->
+            <div>
+                <div class="inline-flex items-center gap-2 text-gold-400 text-xs font-bold uppercase tracking-widest mb-2">
+                    <i data-lucide="share-2" class="w-4 h-4"></i>
+                    <span>LET'S CONNECT</span>
+                </div>
+                <h2 class="font-heading text-3xl md:text-5xl font-extrabold text-white mb-6">
+                    FOLLOW MY <span class="gold-gradient-text">JOURNEY</span>
+                </h2>
+                <p class="text-gray-300 mb-8">
+                    Stay updated with daily stories, behind-the-scenes clips, travel updates, and instant releases across all platforms.
+                </p>
+
+                <div class="space-y-4">
+                    <!-- Instagram -->
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="glass-card p-5 rounded-2xl flex items-center justify-between group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-purple-600 to-pink-500 text-white flex items-center justify-center shadow-lg">
+                                <i data-lucide="instagram" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold font-heading group-hover:text-gold-400 transition-colors">INSTAGRAM</h4>
+                                <span class="text-xs text-gray-400">@bhim.chhaava12</span>
+                            </div>
+                        </div>
+                        <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 group-hover:text-gold-400 group-hover:translate-x-1 transition-all"></i>
+                    </a>
+
+                    <!-- YouTube -->
+                    <a href="https://youtube.com/@ajaymore-tp1ht?si=mtWcyKLgwzh3kJYX" target="_blank" rel="noopener noreferrer" class="glass-card p-5 rounded-2xl flex items-center justify-between group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-red-600 text-white flex items-center justify-center shadow-lg">
+                                <i data-lucide="youtube" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold font-heading group-hover:text-gold-400 transition-colors">YOUTUBE</h4>
+                                <span class="text-xs text-gray-400">@ajaymore-tp1ht</span>
+                            </div>
+                        </div>
+                        <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 group-hover:text-gold-400 group-hover:translate-x-1 transition-all"></i>
+                    </a>
+
+                    <!-- Contact Direct Call/WhatsApp -->
+                    <a href="tel:8329320740" class="glass-card p-5 rounded-2xl flex items-center justify-between group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-lg">
+                                <i data-lucide="phone-call" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold font-heading group-hover:text-gold-400 transition-colors">CONTACT ME</h4>
+                                <span class="text-xs text-gray-400">8329320740</span>
+                            </div>
+                        </div>
+                        <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 group-hover:text-gold-400 group-hover:translate-x-1 transition-all"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Contact Message Form -->
+            <div class="glass-card p-8 rounded-3xl border border-gold-500/20">
+                <h3 class="font-heading text-2xl font-bold text-white mb-2">HAVE A QUESTION?</h3>
+                <p class="text-gray-400 text-sm mb-6">Let's connect and create something amazing.</p>
+
+                <form onsubmit="handleFormSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Your Name</label>
+                        <input type="text" required placeholder="Ajay More" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-gold-500 transition-colors text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Your Email or Phone</label>
+                        <input type="text" required placeholder="yourname@gmail.com / 8329320740" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-gold-500 transition-colors text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Your Message</label>
+                        <textarea rows="4" required placeholder="Let's collaborate on a vlog project..." class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-gold-500 transition-colors text-sm resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-gold-500 to-amber-600 text-black font-extrabold text-xs uppercase tracking-wider hover:brightness-110 transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2">
+                        <span>SEND MESSAGE</span>
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/10 py-12 relative z-10 bg-dark-900/80">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-gold-500 text-black flex items-center justify-center font-extrabold font-heading text-xs">
+                    AM
+                </div>
+                <div>
+                    <span class="font-heading font-extrabold text-white text-sm tracking-wider">AJAY MORE VLOGS</span>
+                    <span class="text-[10px] text-gold-400 block tracking-widest">EXPLORE • CREATE • REMEMBER</span>
+                </div>
+            </div>
+
+            <div class="text-xs text-gray-500 text-center md:text-right">
+                <p>© 2026 AJAY MORE. ALL RIGHTS RESERVED.</p>
+                <p class="mt-1 text-[10px] text-gray-600">PREMIUM UI • 3D EXPERIENTIAL DESIGN</p>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- LIGHTBOX / VIDEO MODAL -->
+    <div id="media-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="relative w-full max-w-4xl glass-panel rounded-3xl p-4 overflow-hidden border border-gold-500/30">
+            <button onclick="closeMediaModal()" class="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/10 text-white hover:bg-gold-500 hover:text-black transition-colors">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div id="modal-content" class="w-full h-full flex items-center justify-center min-h-[300px]">
+                <!-- Dynamic Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 glass-panel border border-gold-500/50 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 transform translate-y-32 opacity-0 transition-all duration-300">
+        <i data-lucide="check-circle-2" class="w-5 h-5 text-gold-400"></i>
+        <span id="toast-message" class="text-sm font-medium">Message Sent Successfully!</span>
+    </div>
+
+    <!-- JAVASCRIPT: THREE.JS 3D SCENE & INTERACTIVES -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Preloader Hide
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 700);
+            }, 600);
+        });
+
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // =========================================================
+        // THREE.JS 3D HERO SCENE (3D Earth + Camera Model + Particles)
+        // =========================================================
+        let scene, camera, renderer, globe, floatingCameraGroup, particleSystem;
+        let mouseX = 0, mouseY = 0;
+        let targetX = 0, targetY = 0;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('hero-canvas');
+            const container = canvas.parentElement;
+
+            // Scene setup
+            scene = new THREE.Scene();
+
+            // Camera setup
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 12;
+
+            // Renderer setup
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xfacc15, 2.5);
+            dirLight.position.set(5, 3, 5);
+            scene.add(dirLight);
+
+            const pointLight = new THREE.PointLight(0xeab308, 3, 20);
+            pointLight.position.set(-5, -2, 2);
+            scene.add(pointLight);
+
+            // --- 1. GLOBE CREATION (Procedural Shader Texture) ---
+            const globeGeo = new THREE.SphereGeometry(3.2, 64, 64);
+            
+            // Create procedural world texture canvas
+            const texCanvas = document.createElement('canvas');
+            texCanvas.width = 1024;
+            texCanvas.height = 512;
+            const ctx = texCanvas.getContext('2d');
+            ctx.fillStyle = '#0b0f17';
+            ctx.fillRect(0, 0, 1024, 512);
+
+            // Draw procedural grid continents / map lines
+            ctx.strokeStyle = '#facc15';
+            ctx.lineWidth = 1;
+            ctx.globalAlpha = 0.35;
+
+            for (let i = 0; i < 1024; i += 32) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, 512);
+                ctx.stroke();
+            }
+            for (let j = 0; j < 512; j += 32) {
+                ctx.beginPath();
+                ctx.moveTo(0, j);
+                ctx.lineTo(1024, j);
+                ctx.stroke();
+            }
+
+            // Draw abstract continent landmass shapes
+            ctx.fillStyle = '#eab308';
+            ctx.globalAlpha = 0.6;
+            for(let k = 0; k < 120; k++) {
+                const x = Math.random() * 1024;
+                const y = Math.random() * 512;
+                const r = 20 + Math.random() * 50;
+                ctx.beginPath();
+                ctx.arc(x, y, r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            const globeTexture = new THREE.CanvasTexture(texCanvas);
+            const globeMat = new THREE.MeshStandardMaterial({
+                map: globeTexture,
+                roughness: 0.4,
+                metalness: 0.3,
+                wireframe: false,
+            });
+
+            globe = new THREE.Mesh(globeGeo, globeMat);
+            scene.add(globe);
+
+            // Globe Atmosphere Glow Wireframe Outer Ring
+            const atmosphereGeo = new THREE.SphereGeometry(3.35, 32, 32);
+            const atmosphereMat = new THREE.MeshBasicMaterial({
+                color: 0xfacc15,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.15
+            });
+            const atmosphere = new THREE.Mesh(atmosphereGeo, atmosphereMat);
+            globe.add(atmosphere);
+
+            // --- 2. FLOATING VINTAGE CAMERA GEOMETRY ---
+            floatingCameraGroup = new THREE.Group();
+
+            // Camera Body
+            const bodyGeo = new THREE.BoxGeometry(1.2, 0.8, 0.6);
+            const bodyMat = new THREE.MeshStandardMaterial({ color: 0x1f2937, metalness: 0.8, roughness: 0.2 });
+            const cameraBody = new THREE.Mesh(bodyGeo, bodyMat);
+            floatingCameraGroup.add(cameraBody);
+
+            // Lens Cylinder
+            const lensGeo = new THREE.CylinderGeometry(0.35, 0.35, 0.5, 32);
+            const lensMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, metalness: 0.9, roughness: 0.1 });
+            const cameraLens = new THREE.Mesh(lensGeo, lensMat);
+            cameraLens.rotation.x = Math.PI / 2;
+            cameraLens.position.z = 0.4;
+            floatingCameraGroup.add(cameraLens);
+
+            // Lens Glass Center
+            const glassGeo = new THREE.SphereGeometry(0.25, 16, 16);
+            const glassMat = new THREE.MeshBasicMaterial({ color: 0xffd700 });
+            const cameraGlass = new THREE.Mesh(glassGeo, glassMat);
+            cameraGlass.position.z = 0.6;
+            floatingCameraGroup.add(cameraGlass);
+
+            // Flash Mount
+            const flashGeo = new THREE.BoxGeometry(0.3, 0.2, 0.3);
+            const flashMat = new THREE.MeshStandardMaterial({ color: 0xd97706 });
+            const cameraFlash = new THREE.Mesh(flashGeo, flashMat);
+            cameraFlash.position.set(0.3, 0.5, 0);
+            floatingCameraGroup.add(cameraFlash);
+
+            floatingCameraGroup.position.set(3.8, 1.2, 2);
+            floatingCameraGroup.scale.set(0.85, 0.85, 0.85);
+            scene.add(floatingCameraGroup);
+
+            // --- 3. FLOATING PARTICLES ---
+            const particlesGeo = new THREE.BufferGeometry();
+            const count = 350;
+            const positions = new Float32Array(count * 3);
+
+            for (let i = 0; i < count * 3; i++) {
+                positions[i] = (Math.random() - 0.5) * 25;
+            }
+
+            particlesGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const particlesMat = new THREE.PointsMaterial({
+                size: 0.05,
+                color: 0xfacc15,
+                transparent: true,
+                opacity: 0.7
+            });
+
+            particleSystem = new THREE.Points(particlesGeo, particlesMat);
+            scene.add(particleSystem);
+
+            // Event Listeners for Interaction & Responsiveness
+            window.addEventListener('resize', onWindowResize);
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('touchmove', onTouchMove, { passive: true });
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onMouseMove(event) {
+            mouseX = (event.clientX - window.innerWidth / 2) * 0.0008;
+            mouseY = (event.clientY - window.innerHeight / 2) * 0.0008;
+        }
+
+        function onTouchMove(event) {
+            if (event.touches.length > 0) {
+                mouseX = (event.touches[0].clientX - window.innerWidth / 2) * 0.0008;
+                mouseY = (event.touches[0].clientY - window.innerHeight / 2) * 0.0008;
+            }
+        }
+
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            targetX += (mouseX - targetX) * 0.05;
+            targetY += (mouseY - targetY) * 0.05;
+
+            // Rotate Globe
+            if (globe) {
+                globe.rotation.y += 0.003;
+                globe.rotation.x = targetY * 0.5;
+                globe.rotation.y += targetX * 0.5;
+            }
+
+            // Floating Camera Orbit & Idle Float
+            if (floatingCameraGroup) {
+                const time = Date.now() * 0.0015;
+                floatingCameraGroup.position.y = 1.2 + Math.sin(time) * 0.25;
+                floatingCameraGroup.rotation.y = Math.sin(time * 0.8) * 0.3 + targetX * 2;
+                floatingCameraGroup.rotation.x = Math.cos(time * 0.8) * 0.2 + targetY * 2;
+            }
+
+            // Particle Subtle Rotation
+            if (particleSystem) {
+                particleSystem.rotation.y += 0.0005;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Initialize 3D Scene on Window Load
+        window.onload = function () {
+            initThreeJS();
+            animate();
+        };
+
+        // =========================================================
+        // LIGHTBOX & MODAL HANDLERS
+        // =========================================================
+        const modal = document.getElementById('media-modal');
+        const modalContent = document.getElementById('modal-content');
+
+        function openVideoModal(videoUrl, title) {
+            modalContent.innerHTML = `
+                <div class="w-full">
+                    <h3 class="text-lg font-heading font-bold text-white mb-4 flex items-center gap-2">
+                        <i data-lucide="play-circle" class="text-gold-400 w-5 h-5"></i>
+                        <span>${title}</span>
+                    </h3>
+                    <div class="relative aspect-video w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                        <iframe class="w-full h-full" src="${videoUrl}?autoplay=1" title="${title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            lucide.createIcons();
+        }
+
+        function openPhotoModal(imageUrl, title) {
+            modalContent.innerHTML = `
+                <div class="text-center w-full">
+                    <div class="max-h-[75vh] overflow-hidden rounded-2xl mb-4 border border-white/10">
+                        <img src="${imageUrl}" alt="${title}" class="w-full h-full object-contain mx-auto max-h-[75vh]">
+                    </div>
+                    <h3 class="text-white font-heading font-bold text-lg">${title}</h3>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            lucide.createIcons();
+        }
+
+        function closeMediaModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            modalContent.innerHTML = '';
+        }
+
+        // Close Modal on Backdrop Click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeMediaModal();
+            }
+        });
+
+        // Form Submission Handler & Toast
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            e.target.reset();
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-32', 'opacity-0');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
